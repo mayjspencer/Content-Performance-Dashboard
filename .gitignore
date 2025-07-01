@@ -1,0 +1,9 @@
+# .gitignore
+venv/
+data/input/
+reports/
+*.pyc
+__pycache__/
+*.csv
+.env
+*.db

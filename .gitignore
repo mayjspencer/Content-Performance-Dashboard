@@ -6,4 +6,5 @@ reports/
 __pycache__/
 *.csv
 .env
-*.db
+*.db.DS_Store
+*/

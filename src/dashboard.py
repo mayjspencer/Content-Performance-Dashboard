@@ -22,39 +22,46 @@ def run_dashboard():
             col1.metric("Total Views (All-Time)", f"{alltime_metrics['total_views']:,}")
             col2.metric("Total Likes (All-Time)", f"{alltime_metrics['total_likes']:,}")
             col3.metric("Total Follower Growth (All-Time)", f"{alltime_metrics['total_follower_growth']:,}")
-            
-            # Weekly Summary Metrics
+
+            # Weekly Summary Comparison
             st.subheader("Weekly Summary Metrics (Latest Week: 2025-06-25)")
-            latest_week = df[df['week'] != 'alltime']['week'].max()
-            latest_df = df[df['week'] == latest_week]
-            previous_week = pd.to_datetime(df[df['week'] != 'alltime']['week']).nlargest(2).iloc[-1]
-            previous_df = df[df['week'] == previous_week]
-            platforms = latest_df['platform'].unique()
+
+            # Only work with rows AFTER the alltime block (skip first 4 rows)
+            df_weekly = df.iloc[4:].reset_index(drop=True)
+
             col1, col2, col3 = st.columns(3)
 
-            for platform in platforms:
-                platform_data = latest_df[latest_df['platform'] == platform]
-                prev_platform_data = previous_df[previous_df['platform'] == platform]
-                
-                # Get current and previous values
-                current_views = int(platform_data['views'].sum())
-                current_likes = int(platform_data['likes'].sum())
-                current_followers = int(platform_data['follower_growth'].sum())
-                prev_views = int(prev_platform_data['views'].sum()) if not prev_platform_data.empty else 0
-                prev_likes = int(prev_platform_data['likes'].sum()) if not prev_platform_data.empty else 0
-                prev_followers = int(prev_platform_data['follower_growth'].sum()) if not prev_platform_data.empty else 0
-                
-                # Calculate percentage changes
+            # Assume platforms appear in the same order every 4 rows (Instagram, Facebook, TikTok, X)
+            platforms = df_weekly['platform'].unique()
+
+            for i, platform in enumerate(platforms):
+                row = i  # latest week's row for this platform
+                compare_row = row + 4  # the same platform, previous week
+
+                # Make sure we have enough data to compare
+                if compare_row >= len(df_weekly):
+                    continue
+
+                current_row = df_weekly.iloc[row]
+                previous_row = df_weekly.iloc[compare_row]
+
+                # Safety check: ensure same platform
+                if current_row['platform'] != previous_row['platform']:
+                    continue
+
+                current_views = int(current_row['views'])
+                current_likes = int(current_row['likes'])
+                current_followers = int(current_row['follower_growth'])
+
+                prev_views = int(previous_row['views'])
+                prev_likes = int(previous_row['likes'])
+                prev_followers = int(previous_row['follower_growth'])
+
                 def calc_percent_change(current, previous):
                     if previous == 0:
                         return float('inf') if current != 0 else 0
                     return ((current - previous) / previous) * 100
-                
-                views_percent = calc_percent_change(current_views, prev_views)
-                likes_percent = calc_percent_change(current_likes, prev_likes)
-                followers_percent = calc_percent_change(current_followers, prev_followers)
-                
-                # Format percentage as plain text
+
                 def format_percent(percent):
                     if percent == float('inf'):
                         return "+∞%"
@@ -64,14 +71,18 @@ def run_dashboard():
                         return f"+{percent:.1f}%"
                     else:
                         return f"{percent:.1f}%"
-                
+
+                views_percent = calc_percent_change(current_views, prev_views)
+                likes_percent = calc_percent_change(current_likes, prev_likes)
+                followers_percent = calc_percent_change(current_followers, prev_followers)
+
                 with col1:
                     st.metric(f"{platform} Views", f"{current_views:,}", delta=format_percent(views_percent), delta_color="normal")
                 with col2:
                     st.metric(f"{platform} Likes", f"{current_likes:,}", delta=format_percent(likes_percent), delta_color="normal")
                 with col3:
-                    st.metric(f"{platform} Follower Growth", f"{current_followers:,}", delta=format_percent(followers_percent), delta_color="normal")       
-                        
+                    st.metric(f"{platform} Follower Growth", f"{current_followers:,}", delta=format_percent(followers_percent), delta_color="normal")
+
             # Week-over-Week Trends by Platform
             st.subheader("Week-over-Week Performance by Platform")
             # Metric selector

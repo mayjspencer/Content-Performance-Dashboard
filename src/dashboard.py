@@ -16,7 +16,7 @@ def run_dashboard():
             df = load_csv(uploaded_file)
             
             # All-Time Summary Metrics
-            st.subheader("All-Time Summary Metrics")
+            st.subheader("All-Time Summary Metrics (Instagram Not Included)")
             alltime_metrics = get_summary_metrics(df, alltime=True)
             col1, col2, col3 = st.columns(3)
             col1.metric("Total Views (All-Time)", f"{alltime_metrics['total_views']:,}")
@@ -27,17 +27,51 @@ def run_dashboard():
             st.subheader("Weekly Summary Metrics (Latest Week: 2025-06-25)")
             latest_week = df[df['week'] != 'alltime']['week'].max()
             latest_df = df[df['week'] == latest_week]
+            previous_week = pd.to_datetime(df[df['week'] != 'alltime']['week']).nlargest(2).iloc[-1]
+            previous_df = df[df['week'] == previous_week]
             platforms = latest_df['platform'].unique()
             col1, col2, col3 = st.columns(3)
+
             for platform in platforms:
                 platform_data = latest_df[latest_df['platform'] == platform]
+                prev_platform_data = previous_df[previous_df['platform'] == platform]
+                
+                # Get current and previous values
+                current_views = int(platform_data['views'].sum())
+                current_likes = int(platform_data['likes'].sum())
+                current_followers = int(platform_data['follower_growth'].sum())
+                prev_views = int(prev_platform_data['views'].sum()) if not prev_platform_data.empty else 0
+                prev_likes = int(prev_platform_data['likes'].sum()) if not prev_platform_data.empty else 0
+                prev_followers = int(prev_platform_data['follower_growth'].sum()) if not prev_platform_data.empty else 0
+                
+                # Calculate percentage changes
+                def calc_percent_change(current, previous):
+                    if previous == 0:
+                        return float('inf') if current != 0 else 0
+                    return ((current - previous) / previous) * 100
+                
+                views_percent = calc_percent_change(current_views, prev_views)
+                likes_percent = calc_percent_change(current_likes, prev_likes)
+                followers_percent = calc_percent_change(current_followers, prev_followers)
+                
+                # Format percentage as plain text
+                def format_percent(percent):
+                    if percent == float('inf'):
+                        return "+∞%"
+                    elif percent == 0:
+                        return "0%"
+                    elif percent > 0:
+                        return f"+{percent:.1f}%"
+                    else:
+                        return f"{percent:.1f}%"
+                
                 with col1:
-                    st.metric(f"{platform} Views", f"{int(platform_data['views'].sum()):,}")
+                    st.metric(f"{platform} Views", f"{current_views:,}", delta=format_percent(views_percent), delta_color="normal")
                 with col2:
-                    st.metric(f"{platform} Likes", f"{int(platform_data['likes'].sum()):,}")
+                    st.metric(f"{platform} Likes", f"{current_likes:,}", delta=format_percent(likes_percent), delta_color="normal")
                 with col3:
-                    st.metric(f"{platform} Follower Growth", f"{int(platform_data['follower_growth'].sum()):,}")
-        
+                    st.metric(f"{platform} Follower Growth", f"{current_followers:,}", delta=format_percent(followers_percent), delta_color="normal")       
+                        
             # Week-over-Week Trends by Platform
             st.subheader("Week-over-Week Performance by Platform")
             # Metric selector
@@ -63,6 +97,17 @@ def run_dashboard():
             col1, col2 = st.columns(2)
             col1.plotly_chart(fig_views, use_container_width=True)
             col2.plotly_chart(fig_likes, use_container_width=True)
+
+            # All-Time Platform Comparison
+            st.subheader("All-Time Platform Comparison (Instagram Not Included)")
+            alltime_data = df[df['week'] == 'alltime'].groupby('platform')[['views', 'likes', 'follower_growth']].sum().reset_index()
+            fig_views_alltime = px.bar(alltime_data, x='platform', y='views', title="All-Time Total Views by Platform",
+                                    color='platform')
+            fig_likes_alltime = px.bar(alltime_data, x='platform', y='likes', title="All-Time Total Likes by Platform",
+                                    color='platform')
+            col1, col2 = st.columns(2)
+            col1.plotly_chart(fig_views_alltime, use_container_width=True)
+            col2.plotly_chart(fig_likes_alltime, use_container_width=True)
             
         except Exception as e:
             st.error(f"Error: {e}")

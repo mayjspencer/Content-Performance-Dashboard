@@ -1,21 +1,41 @@
-# src/data_processor.py
 import pandas as pd
 
-def load_csv(file_path):
-    """Load and validate the CSV file."""
+def load_socialmedia_csv(file_path):
+    """Load and validate the main social media performance CSV."""
     try:
         df = pd.read_csv(file_path)
         required_columns = ['week', 'platform', 'likes', 'views', 'follower_growth']
         if not all(col in df.columns for col in required_columns):
-            raise ValueError("CSV missing required columns")
-        # Convert 'week' to datetime, handle 'alltime' separately
+            raise ValueError("CSV missing required columns for social media data")
+        
+        # Parse 'week'
         df['week'] = df['week'].apply(lambda x: pd.to_datetime(x, format='%Y-%m-%d') if x != 'alltime' else x)
-        # Convert 'likes', 'views', 'follower_growth' to numeric, replacing 'n/a' with 0
+
+        # Convert numeric fields
         for col in ['likes', 'views', 'follower_growth']:
             df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
+
         return df
     except Exception as e:
-        raise Exception(f"Error loading CSV: {e}")
+        raise Exception(f"Error loading social media CSV: {e}")
+
+
+def load_top5_csv(file_path):
+    """Load and parse the Top 5 Posts CSV."""
+    try:
+        df = pd.read_csv(file_path)
+
+        required_columns = ['Post Type', 'Link', 'Views', 'Engagement']
+        if not all(col in df.columns for col in required_columns):
+            raise ValueError("CSV missing required columns for Top 5 data")
+
+        # Clean numeric fields: remove commas and convert
+        for col in ['Views', 'Engagement']:
+            df[col] = df[col].replace({',': ''}, regex=True).astype(int)
+
+        return df
+    except Exception as e:
+        raise Exception(f"Error loading Top 5 CSV: {e}")
 
 def get_summary_metrics(df, alltime=False):
     """Calculate total views, likes, and follower growth, optionally for alltime."""

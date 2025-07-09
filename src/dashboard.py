@@ -3,6 +3,11 @@ import pandas as pd
 import plotly.express as px
 from src.data_processor import load_socialmedia_csv, load_top5_csv, get_summary_metrics, get_platform_breakdown, get_weekly_trends, get_top_platforms
 import os
+from src.report_generator import generate_pdf_report
+
+def save_fig_as_png(fig, filename):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    fig.write_image(filename, width=600, height=400)
 
 def run_dashboard():
     st.title("Content Performance Dashboard")
@@ -81,6 +86,7 @@ def run_dashboard():
                             labels={metric: metric.replace("_", " ").title(), 'week': 'Week'},
                             color='platform')
             fig.update_layout(showlegend=False)
+            save_fig_as_png(fig, f"reports/images/{platform}_weekly_trends.png")
             st.plotly_chart(fig, use_container_width=True)
         
         # Platform vs. Platform Comparison
@@ -90,9 +96,12 @@ def run_dashboard():
         fig_likes = px.bar(platform_data, x='platform', y='likes', title="Total Likes", color='platform')
         fig_views.update_layout(showlegend=False)
         fig_likes.update_layout(showlegend=False)
+        save_fig_as_png(fig_views, "reports/images/platform_views.png")
+        save_fig_as_png(fig_likes, "reports/images/platform_likes.png")
         col1, col2 = st.columns(2)
         col1.plotly_chart(fig_views, use_container_width=True)
         col2.plotly_chart(fig_likes, use_container_width=True)
+
 
         # All-Time Platform Comparison
         st.subheader("All-Time Platform Comparison (Instagram Not Included)")
@@ -101,9 +110,15 @@ def run_dashboard():
         fig_likes_alltime = px.bar(alltime_data, x='platform', y='likes', title="All-Time Likes", color='platform')
         fig_views_alltime.update_layout(showlegend=False)
         fig_likes_alltime.update_layout(showlegend=False)
+
+        # Save PNG files
+        save_fig_as_png(fig_views_alltime, "reports/images/alltime_views.png")
+        save_fig_as_png(fig_likes_alltime, "reports/images/alltime_likes.png")
+
         col1, col2 = st.columns(2)
         col1.plotly_chart(fig_views_alltime, use_container_width=True)
         col2.plotly_chart(fig_likes_alltime, use_container_width=True)
+
 
         # Top 5 Table
         st.subheader("Top 5 Posts Overview (Latest Week)")
@@ -154,8 +169,20 @@ def run_dashboard():
             xaxis_title='Post Rank',
             yaxis_title='Views'
         )
+        save_fig_as_png(fig_top5_compare, "reports/images/top5_comparison.png")
+
 
         st.plotly_chart(fig_top5_compare, use_container_width=True)
+
+        # PDF Report Generation Section
+        st.subheader("Downloadable PDF Report")
+
+        if st.button("Generate PDF Report"):
+            try:
+                generate_pdf_report()  # writes to reports/summary_report.pdf
+                st.success("PDF report generated successfully. See reports/summary_report.pdf")
+            except Exception as e:
+                st.error(f"Failed to generate PDF report: {e}")
 
     except Exception as e:
         st.error(f"Error: {e}")

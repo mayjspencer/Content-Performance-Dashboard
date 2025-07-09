@@ -1,10 +1,7 @@
-# .gitignore
 venv/
-data/input/
 reports/
 *.pyc
 __pycache__/
-*.csv
 .env
-*.db.DS_Store
-*/
+*.db
+.DS_Store

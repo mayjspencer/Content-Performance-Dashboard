@@ -7,7 +7,6 @@ from src.data_processor import (
     get_weekly_trends, get_top_platforms
 )
 import os
-from src.report_generator import generate_pdf_report
 
 def run_dashboard():
     st.title("Content Performance Dashboard")

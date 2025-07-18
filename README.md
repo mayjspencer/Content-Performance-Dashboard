@@ -15,11 +15,14 @@ A streamlined dashboard for visualizing weekly performance across Facebook, TikT
 -  **Top Performing Posts**: Highlights the week’s 5 best posts  
 -  **Upload & Snapshot Ready**: Simple interface for weekly updates
 
-## Screenshot
+## Dashboard Preview
 
-> _(Add a real screenshot or animated GIF of your dashboard UI here — let me know if you want help making one)_
+### Summary Metrics View
+![Summary Metrics](assets/summary_metrics.png)
 
-![Screenshot Placeholder](images/dashboard-screenshot.png)
+### Top 5 Posts Comparison
+![Top 5 Posts](assets/top_posts.png)
+
 
 ## Tech Stack
 

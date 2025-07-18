@@ -55,3 +55,9 @@ pip install -r requirements.txt
 ```bash
 streamlit run dashboard.py
 ```
+
+## Sample Data
+
+This app is designed to work with .csv files exported from platform insights (e.g., Facebook Creator Studio, X Analytics, etc.)
+
+See the data/input folder for mock files to try the app locally.

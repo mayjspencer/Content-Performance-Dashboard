@@ -1,5 +1,9 @@
 # Content Performance Dashboard
-This is a streamlined dashboard for visualizing weekly performance across Facebook, TikTok, YouTube, and other platforms. I built this to replace messy spreadsheets for our small media business. It helped us quickly identify what was working, what was not working, and where to focus next. It was much more readable and accessible for all members of our team.
+This is a streamlined dashboard for visualizing weekly performance across Facebook, TikTok, YouTube, and other platforms. I built this to replace messy spreadsheets for our small media business.
+
+It helped us quickly identify what was working, what was not working, and where to focus next.
+
+It was much more readable and accessible for all members of our team.
 
 - [**Live Demo**](https://boomerbackfield.streamlit.app)
 

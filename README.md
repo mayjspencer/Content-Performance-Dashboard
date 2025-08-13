@@ -1,19 +1,26 @@
 # Content Performance Dashboard
-A streamlined dashboard for visualizing weekly performance across Facebook, TikTok, YouTube, and other platforms. Built to replace messy spreadsheets, this tool helps our small media team quickly identify what’s working, what’s trending, and where to focus next.
+![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-orange)
+
+This is a streamlined dashboard for visualizing weekly performance across Facebook, TikTok, YouTube, and other platforms.
+
+I built this to replace messy spreadsheets for our small media business.
+
+It helped us quickly identify what was working, what was not working, and where to focus next.
+
+It was much more readable and accessible for all members of our team.
 
 - [**Live Demo**](https://boomerbackfield.streamlit.app)
 
-- 🛠️ Python • Streamlit •  Plotly
+- 🛠️ Built with: Python • Streamlit •  Plotly
 
-- Used internally by our startup to track Social Media pages with 45M+ views.
+- Used by a media startup to monitor performance on pages with 45M+ total views.
 
 ## Features
 
 -  **Multi-Platform Analysis**: Upload weekly `.csv` exports from Facebook, TikTok, and others  
--  **Weekly Metrics Overview**: Total views, reach, and post count  
--  **Multi-Week Trends**: Compare engagement over time with line and bar charts  
--  **Top Performing Posts**: Highlights the week’s 5 best posts  
--  **Upload & Snapshot Ready**: Simple interface for weekly updates
+-  **Weekly Metrics Comparisons**: Compare engagement over time with line and bar charts  
+-  **Highlights and Compares Top Performing Posts**: Highlights the week’s 5 best posts  
+-  **Hosted By Streamlit For Accessiblity**
 
 ## Dashboard Preview
 
@@ -34,7 +41,6 @@ A streamlined dashboard for visualizing weekly performance across Facebook, TikT
 
 ## Live Demo
 
-Want to try it yourself?  
  **[Click here to view the live app](https://boomerbackfield.streamlit.app)**
 
 ## How to Run Locally

@@ -3,7 +3,7 @@
 
 This is a streamlined dashboard for visualizing weekly performance across Facebook, TikTok, YouTube, and other platforms.
 
-I built this to replace messy spreadsheets for our small media business.
+I built this to replace messy spreadsheets for a media business.
 
 It helped us quickly identify what was working, what was not working, and where to focus next.
 
@@ -36,35 +36,3 @@ It was much more readable and accessible for all members of our team.
 - **Visualization**: Plotly
 - **Deployment**: Streamlit Community Cloud
 - **Version Control**: Git + GitHub
-
-## Live Demo
-
- **[Click here to view the live app](https://boomerbackfield.streamlit.app)**
-
-## How to Run Locally
-
-1. Clone this repo:
-```bash
-git clone https://github.com/mayjspencer/content-performance-dashboard.git
-cd content-performance-dashboard
-```
-
-2. Set up a virtual environment:
-```bash
-python3 -m venv venv
-source venv/bin/activate  # Windows: .\venv\Scripts\activate
-```
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-4. Run the app:
-```bash
-streamlit run dashboard.py
-```
-
-## Sample Data
-
-This app is designed to work with .csv files exported from platform insights (e.g., Facebook Creator Studio, X Analytics, etc.)
-
-See the data/input folder for mock files to try the app locally.

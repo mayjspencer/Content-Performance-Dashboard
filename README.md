@@ -9,8 +9,6 @@ It helped us quickly identify what was working, what was not working, and where 
 
 It was much more readable and accessible for all members of our team.
 
-- [**Live Demo**](https://boomerbackfield.streamlit.app)
-
 - 🛠️ Built with: Python • Streamlit •  Plotly
 
 - Used by a media startup to monitor performance on pages with 45M+ total views.
